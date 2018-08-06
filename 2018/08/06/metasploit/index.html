@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://flylai.ml">
   <title>metasploit 入门教程 | ALai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="摘要">
+  <meta name="description" content="–作者：CV本文主要讲metasploit的入门用法，还有一些渗透细节和思路，有不足的，欢迎互相学习研究。本人区别于书籍的特点是：书籍以模块为划分，我是以连续的步骤进行书写，更突出一次渗透的思路，同时我会通过强调步骤的细节技巧，用以拓展相关类容。 由于我现在对metasploit的深入度并不足，只能使用metasploit做一些初级入门的系统测试，一下是常规步骤和方法: 1、    使用nmap进">
 <meta name="keywords" content="随笔">
 <meta property="og:type" content="article">
 <meta property="og:title" content="metasploit 入门教程">
 <meta property="og:url" content="http://flylai.ml/2018/08/06/metasploit/index.html">
 <meta property="og:site_name" content="ALai">
-<meta property="og:description" content="摘要">
+<meta property="og:description" content="–作者：CV本文主要讲metasploit的入门用法，还有一些渗透细节和思路，有不足的，欢迎互相学习研究。本人区别于书籍的特点是：书籍以模块为划分，我是以连续的步骤进行书写，更突出一次渗透的思路，同时我会通过强调步骤的细节技巧，用以拓展相关类容。 由于我现在对metasploit的深入度并不足，只能使用metasploit做一些初级入门的系统测试，一下是常规步骤和方法: 1、    使用nmap进">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://img-blog.csdn.net/20170603230924001?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="https://img-blog.csdn.net/20170603231006688?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
@@ -27,10 +27,10 @@
 <meta property="og:image" content="https://img-blog.csdn.net/20170603231745880?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="https://img-blog.csdn.net/20170603231923131?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
 <meta property="og:image" content="https://img-blog.csdn.net/20170603232004616?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
-<meta property="og:updated_time" content="2018-08-06T03:19:19.107Z">
+<meta property="og:updated_time" content="2018-08-06T07:56:26.919Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="metasploit 入门教程">
-<meta name="twitter:description" content="摘要">
+<meta name="twitter:description" content="–作者：CV本文主要讲metasploit的入门用法，还有一些渗透细节和思路，有不足的，欢迎互相学习研究。本人区别于书籍的特点是：书籍以模块为划分，我是以连续的步骤进行书写，更突出一次渗透的思路，同时我会通过强调步骤的细节技巧，用以拓展相关类容。 由于我现在对metasploit的深入度并不足，只能使用metasploit做一些初级入门的系统测试，一下是常规步骤和方法: 1、    使用nmap进">
 <meta name="twitter:image" content="https://img-blog.csdn.net/20170603230924001?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd3NoMTk5MzAzMDU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">
   
     <link rel="alternative" href="/atom.xml" title="ALai" type="application/atom+xml">
@@ -336,18 +336,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2018/08/06/kail_sourcelist/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/08/06/metasploit_cmd/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Kail 更新国内源
+          metasploit 命令大全
         
       </div>
     </a>
   
   
-    <a href="/2018/08/02/create_github_page/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">使用hexo+github搭建免费个人博客详细教程</div>
+    <a href="/2018/08/06/kail_sourcelist/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kail 更新国内源</div>
       <i class="icon-circle-right"></i>
     </a>
   
