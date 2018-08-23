@@ -163,72 +163,64 @@
       
         <p><strong>说明：</strong>此前用的一直是91yun大神制作的<code>openvz</code>的<code>BBR</code>一键包，今天看到扩软博主也制作了个<code>openvz</code>的<code>BBR</code>一键包，就转过来了。不过对于<code>VPS</code>，还是建议选择<code>KVM</code>架构，可玩性高.</p>
 <h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>已测试通过的系统：<code>Ubuntu 14.04 x64</code>、<code>Ubuntu 16.04 x64</code>、<code>CentOS 6 x64</code>、<code>CentOS 7 x64</code>只支持<code>64</code>位系统，要求<code>glibc</code>版本<code>2.14</code>以上。</p>
-<pre><code>wget --no-check-certificate https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-bbr-installer.sh
-chmod +x ovz-bbr-installer.sh
-./ovz-bbr-installer.sh
-
-**注意：**安装失败的话，可能后台没有开启`TUN/TAP`。
+<blockquote>
+<p>wget –no-check-certificate &gt; <a href="https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-b" target="_blank" rel="noopener">https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-b</a> br-installer.sh</p>
+</blockquote>
+<blockquote>
+<p>chmod +x ovz-bbr-installer.sh</p>
+</blockquote>
+<blockquote>
+<p>./ovz-bbr-installer.sh</p>
+</blockquote>
+<pre><code>**注意：**安装失败的话，可能后台没有开启`TUN/TAP`。
 **需要配置的有如下几个选项：**
 1、需要加速的端口，即的`55`端口。加速开启之后，流量会先经过`BBR`处理，之后再发送给后端的`55`。
 2、可能需要配置 “公网接口名称”，即你服务器上具有公网`IP`的接口名称。搬瓦工`OpenVZ`上默认都是`venet0`，但是有朋友可能需要安装在其他服务器上，所以我加入了此选项。
 
 **注意：**在有`firewalld`的服务器上安装的时候，`firewalld`会干扰`iptables`的规则，造成网络不通（现在具体原因未知，谁有解决方案可以提示一下）。所以在装有`firewalld`的服务器上需要先退出`firewalld`：
-systemctl stop firewalld
-systemctl stop firewalld
-
-**如需卸载，请使用：**
-./ovz-bbr-installer.sh uninstall
-</code></pre><h2 id="错误说明"><a href="#错误说明" class="headerlink" title="错误说明"></a>错误说明</h2><pre><code>有些机器一切正常，但是加速失败。从网友的反馈来看，可能需要将`55`的监听地址从`vps IP`改到`127.0.0.1`或者 `0.0.0.0`，具体未测试，加速失败的朋友可以试一试。
-&lt;div name=&quot;多端口加速&quot; data-unique=&quot;多端口加速&quot;&gt;&lt;/div&gt;
+</code></pre><blockquote>
+<p>systemctl stop firewalld<br>systemctl stop firewalld</p>
+</blockquote>
+<pre><code>**如需卸载，请使用：**
+</code></pre><blockquote>
+<p>./ovz-bbr-installer.sh uninstall</p>
+</blockquote>
+<h2 id="错误说明"><a href="#错误说明" class="headerlink" title="错误说明"></a>错误说明</h2><pre><code>有些机器一切正常，但是加速失败。从网友的反馈来看，可能需要将`55`的监听地址从`vps IP`改到`127.0.0.1`或者 `0.0.0.0`，具体未测试，加速失败的朋友可以试一试。
 </code></pre><h2 id="多端口加速"><a href="#多端口加速" class="headerlink" title="多端口加速"></a>多端口加速</h2><pre><code>安装的时候只配置了一个加速端口，但是你可以配置多端口加速，配置方法非常简单。修改文件
-# vi /usr/local/haproxy-lkl/etc/port-rules
-
-在文件里添加需要加速的端口，每行一条，可以配置单个端口或者端口范围，以`#`开头的行将被忽略。 例如：`8800`或者`8800-8810`配置完成之后，只需要重启`haproxy-lkl`即可。
+</code></pre><blockquote>
+<h1 id="vi-usr-local-haproxy-lkl-etc-port-rules"><a href="#vi-usr-local-haproxy-lkl-etc-port-rules" class="headerlink" title="vi /usr/local/haproxy-lkl/etc/port-rules"></a>vi /usr/local/haproxy-lkl/etc/port-rules</h1></blockquote>
+<pre><code>在文件里添加需要加速的端口，每行一条，可以配置单个端口或者端口范围，以`#`开头的行将被忽略。 例如：`8800`或者`8800-8810`配置完成之后，只需要重启`haproxy-lkl`即可。
 
 **注：**最初版本的实现是需要再开一个新端口，后来经人提醒，我又看了一下`HAproxy`的配置说明，可以直接代理后端端口，不必再开新端口。请注意，使用该方法后，如果`HAproxy`进程异常退出，会造成无法连接原有端口。所以，请确保在退出 `HAproxy`时是通过命令正常退出的，在退出时会自动清理原有的防火墙规则。
 
 使用`systemctl`或者`service`命令来启动、停止和重启`HAporxy-lkl`：
-systemctl {start|stop|restart} haproxy-lkl
-
-service haproxy-lkl {start|stop|restart}
-
-`/usr/local/haproxy-lkl/etc/haproxy.cfg`这个文件是通过`port-rules`自动生成的，每次启动都会重新生成，所以直接修改它的配置没用。 如果想要自定义配置，请修改启动文件：
+</code></pre><blockquote>
+<p>systemctl {start|stop|restart} haproxy-lkl</p>
+</blockquote>
+<blockquote>
+<p>service haproxy-lkl {start|stop|restart}</p>
+</blockquote>
+<pre><code>`/usr/local/haproxy-lkl/etc/haproxy.cfg`这个文件是通过`port-rules`自动生成的，每次启动都会重新生成，所以直接修改它的配置没用。 如果想要自定义配置，请修改启动文件：
 /usr/local/haproxy-lkl/sbin/haproxy-lkl
 
 &lt;div name=&quot;更新glibc&quot; data-unique=&quot;更新glibc&quot;&gt;&lt;/div&gt;
 </code></pre><h2 id="更新glibc"><a href="#更新glibc" class="headerlink" title="更新glibc"></a>更新glibc</h2><pre><code>**1、`CentOS 6`更新`glibc`，首先下载如下几个文件：**
-wget http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm
-
-**2、然后安装：**
-# rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \
-glibc-common-2.15-60.el6.x86_64.rpm \
-glibc-devel-2.15-60.el6.x86_64.rpm \
-glibc-headers-2.15-60.el6.x86_64.rpm \
-nscd-2.15-60.el6.x86_64.rpm
-
-**3、如果以上步骤无法更新，可以手动编译更新**
-get http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz
-wget http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz
-tar -zxf glibc-2.15.tar.gz
-tar -zxf glibc-ports-2.15.tar.gz
-mv glibc-ports-2.15 glibc-2.15/ports
-mkdir glibc-build-2.15
-cd glibc-build-2.15
-../glibc-2.15/configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
-make all &amp;&amp; make install
-
-**4、检查一下：**
-# ldd --version
-ldd (GNU libc) 2.15
-Copyright (C) 2012 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-Written by Roland McGrath and Ulrich Drepper.
-</code></pre><p>已经升级到<code>glibc 2.15</code>了。</p>
+</code></pre><blockquote>
+<p>wget <a href="http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm</a></p>
+</blockquote>
+<pre><code>**2、然后安装：**
+</code></pre><blockquote>
+<h1 id="rpm-Uvh-glibc-2-15-60-el6-x86-64-rpm"><a href="#rpm-Uvh-glibc-2-15-60-el6-x86-64-rpm" class="headerlink" title="rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \"></a>rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \</h1><p>glibc-common-2.15-60.el6.x86_64.rpm \<br>glibc-devel-2.15-60.el6.x86_64.rpm \<br>glibc-headers-2.15-60.el6.x86_64.rpm \<br>nscd-2.15-60.el6.x86_64.rpm</p>
+</blockquote>
+<pre><code>**3、如果以上步骤无法更新，可以手动编译更新**
+</code></pre><blockquote>
+<p>get <a href="http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz" target="_blank" rel="noopener">http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz</a><br>wget <a href="http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz" target="_blank" rel="noopener">http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz</a><br>tar -zxf glibc-2.15.tar.gz<br>tar -zxf glibc-ports-2.15.tar.gz<br>mv glibc-ports-2.15 glibc-2.15/ports<br>mkdir glibc-build-2.15<br>cd glibc-build-2.15<br>../glibc-2.15/configure –prefix=/usr –disable-profile –enable-add-ons –with-headers=/usr/include –with-binutils=/usr/bin<br>make all &amp;&amp; make install</p>
+</blockquote>
+<pre><code>**4、检查一下：**
+</code></pre><blockquote>
+<h1 id="ldd-–version"><a href="#ldd-–version" class="headerlink" title="ldd –version"></a>ldd –version</h1><p>ldd (GNU libc) 2.15<br>Copyright (C) 2012 Free Software Foundation, Inc.<br>This is free software; see the source for copying conditions.  There is NO<br>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>Written by Roland McGrath and Ulrich Drepper.</p>
+</blockquote>
+<p>已经升级到<code>glibc 2.15</code>了。</p>
 <div name="判断BBR已正常工作" data-unique="判断BBR已正常工作"></div>
 
 <h2 id="判断BBR已正常工作"><a href="#判断BBR已正常工作" class="headerlink" title="判断BBR已正常工作"></a>判断BBR已正常工作</h2><p>判断<code>bbr</code>是否正常启动可以尝试<code>ping 10.0.0.2</code>，如果能通，说明<code>bbr</code>已经启动。</p>
@@ -886,108 +878,6 @@ Exploit&amp;nbsp;&amp;nbsp; 攻击
 
 
   
-    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
-  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
-<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
-<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
-<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
-<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
-<p>changelog – 下载指定软件包，并显示其changelog</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-metasploit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1110,6 +1000,108 @@ Exploit&amp;nbsp;&amp;nbsp; 攻击
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/08/06/metasploit/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
+  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
+<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
+<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
+<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
+<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
+<p>changelog – 下载指定软件包，并显示其changelog</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
         </p>
       
 

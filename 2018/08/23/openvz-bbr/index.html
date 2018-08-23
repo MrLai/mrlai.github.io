@@ -8,18 +8,18 @@
   <link rel="dns-prefetch" href="http://flylai.ml">
   <title>OpenVZ平台Google BBR一键安装脚本 | ALai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。 wget --no">
+  <meta name="description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。  wget –no">
 <meta name="keywords" content="随笔">
 <meta property="og:type" content="article">
 <meta property="og:title" content="OpenVZ平台Google BBR一键安装脚本">
 <meta property="og:url" content="http://flylai.ml/2018/08/23/openvz-bbr/index.html">
 <meta property="og:site_name" content="ALai">
-<meta property="og:description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。 wget --no">
+<meta property="og:description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。  wget –no">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-08-23T03:07:57.883Z">
+<meta property="og:updated_time" content="2018-08-23T03:12:22.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenVZ平台Google BBR一键安装脚本">
-<meta name="twitter:description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。 wget --no">
+<meta name="twitter:description" content="说明：此前用的一直是91yun大神制作的openvz的BBR一键包，今天看到扩软博主也制作了个openvz的BBR一键包，就转过来了。不过对于VPS，还是建议选择KVM架构，可玩性高. 使用方法已测试通过的系统：Ubuntu 14.04 x64、Ubuntu 16.04 x64、CentOS 6 x64、CentOS 7 x64只支持64位系统，要求glibc版本2.14以上。  wget –no">
   
     <link rel="alternative" href="/atom.xml" title="ALai" type="application/atom+xml">
   
@@ -165,72 +165,64 @@
       
         <p><strong>说明：</strong>此前用的一直是91yun大神制作的<code>openvz</code>的<code>BBR</code>一键包，今天看到扩软博主也制作了个<code>openvz</code>的<code>BBR</code>一键包，就转过来了。不过对于<code>VPS</code>，还是建议选择<code>KVM</code>架构，可玩性高.</p>
 <h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>已测试通过的系统：<code>Ubuntu 14.04 x64</code>、<code>Ubuntu 16.04 x64</code>、<code>CentOS 6 x64</code>、<code>CentOS 7 x64</code>只支持<code>64</code>位系统，要求<code>glibc</code>版本<code>2.14</code>以上。</p>
-<pre><code>wget --no-check-certificate https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-bbr-installer.sh
-chmod +x ovz-bbr-installer.sh
-./ovz-bbr-installer.sh
-
-**注意：**安装失败的话，可能后台没有开启`TUN/TAP`。
+<blockquote>
+<p>wget –no-check-certificate &gt; <a href="https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-b" target="_blank" rel="noopener">https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-b</a> br-installer.sh</p>
+</blockquote>
+<blockquote>
+<p>chmod +x ovz-bbr-installer.sh</p>
+</blockquote>
+<blockquote>
+<p>./ovz-bbr-installer.sh</p>
+</blockquote>
+<pre><code>**注意：**安装失败的话，可能后台没有开启`TUN/TAP`。
 **需要配置的有如下几个选项：**
 1、需要加速的端口，即的`55`端口。加速开启之后，流量会先经过`BBR`处理，之后再发送给后端的`55`。
 2、可能需要配置 “公网接口名称”，即你服务器上具有公网`IP`的接口名称。搬瓦工`OpenVZ`上默认都是`venet0`，但是有朋友可能需要安装在其他服务器上，所以我加入了此选项。
 
 **注意：**在有`firewalld`的服务器上安装的时候，`firewalld`会干扰`iptables`的规则，造成网络不通（现在具体原因未知，谁有解决方案可以提示一下）。所以在装有`firewalld`的服务器上需要先退出`firewalld`：
-systemctl stop firewalld
-systemctl stop firewalld
-
-**如需卸载，请使用：**
-./ovz-bbr-installer.sh uninstall
-</code></pre><h2 id="错误说明"><a href="#错误说明" class="headerlink" title="错误说明"></a>错误说明</h2><pre><code>有些机器一切正常，但是加速失败。从网友的反馈来看，可能需要将`55`的监听地址从`vps IP`改到`127.0.0.1`或者 `0.0.0.0`，具体未测试，加速失败的朋友可以试一试。
-&lt;div name=&quot;多端口加速&quot; data-unique=&quot;多端口加速&quot;&gt;&lt;/div&gt;
+</code></pre><blockquote>
+<p>systemctl stop firewalld<br>systemctl stop firewalld</p>
+</blockquote>
+<pre><code>**如需卸载，请使用：**
+</code></pre><blockquote>
+<p>./ovz-bbr-installer.sh uninstall</p>
+</blockquote>
+<h2 id="错误说明"><a href="#错误说明" class="headerlink" title="错误说明"></a>错误说明</h2><pre><code>有些机器一切正常，但是加速失败。从网友的反馈来看，可能需要将`55`的监听地址从`vps IP`改到`127.0.0.1`或者 `0.0.0.0`，具体未测试，加速失败的朋友可以试一试。
 </code></pre><h2 id="多端口加速"><a href="#多端口加速" class="headerlink" title="多端口加速"></a>多端口加速</h2><pre><code>安装的时候只配置了一个加速端口，但是你可以配置多端口加速，配置方法非常简单。修改文件
-# vi /usr/local/haproxy-lkl/etc/port-rules
-
-在文件里添加需要加速的端口，每行一条，可以配置单个端口或者端口范围，以`#`开头的行将被忽略。 例如：`8800`或者`8800-8810`配置完成之后，只需要重启`haproxy-lkl`即可。
+</code></pre><blockquote>
+<h1 id="vi-usr-local-haproxy-lkl-etc-port-rules"><a href="#vi-usr-local-haproxy-lkl-etc-port-rules" class="headerlink" title="vi /usr/local/haproxy-lkl/etc/port-rules"></a>vi /usr/local/haproxy-lkl/etc/port-rules</h1></blockquote>
+<pre><code>在文件里添加需要加速的端口，每行一条，可以配置单个端口或者端口范围，以`#`开头的行将被忽略。 例如：`8800`或者`8800-8810`配置完成之后，只需要重启`haproxy-lkl`即可。
 
 **注：**最初版本的实现是需要再开一个新端口，后来经人提醒，我又看了一下`HAproxy`的配置说明，可以直接代理后端端口，不必再开新端口。请注意，使用该方法后，如果`HAproxy`进程异常退出，会造成无法连接原有端口。所以，请确保在退出 `HAproxy`时是通过命令正常退出的，在退出时会自动清理原有的防火墙规则。
 
 使用`systemctl`或者`service`命令来启动、停止和重启`HAporxy-lkl`：
-systemctl {start|stop|restart} haproxy-lkl
-
-service haproxy-lkl {start|stop|restart}
-
-`/usr/local/haproxy-lkl/etc/haproxy.cfg`这个文件是通过`port-rules`自动生成的，每次启动都会重新生成，所以直接修改它的配置没用。 如果想要自定义配置，请修改启动文件：
+</code></pre><blockquote>
+<p>systemctl {start|stop|restart} haproxy-lkl</p>
+</blockquote>
+<blockquote>
+<p>service haproxy-lkl {start|stop|restart}</p>
+</blockquote>
+<pre><code>`/usr/local/haproxy-lkl/etc/haproxy.cfg`这个文件是通过`port-rules`自动生成的，每次启动都会重新生成，所以直接修改它的配置没用。 如果想要自定义配置，请修改启动文件：
 /usr/local/haproxy-lkl/sbin/haproxy-lkl
 
 &lt;div name=&quot;更新glibc&quot; data-unique=&quot;更新glibc&quot;&gt;&lt;/div&gt;
 </code></pre><h2 id="更新glibc"><a href="#更新glibc" class="headerlink" title="更新glibc"></a>更新glibc</h2><pre><code>**1、`CentOS 6`更新`glibc`，首先下载如下几个文件：**
-wget http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm \
-http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm
-
-**2、然后安装：**
-# rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \
-glibc-common-2.15-60.el6.x86_64.rpm \
-glibc-devel-2.15-60.el6.x86_64.rpm \
-glibc-headers-2.15-60.el6.x86_64.rpm \
-nscd-2.15-60.el6.x86_64.rpm
-
-**3、如果以上步骤无法更新，可以手动编译更新**
-get http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz
-wget http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz
-tar -zxf glibc-2.15.tar.gz
-tar -zxf glibc-ports-2.15.tar.gz
-mv glibc-ports-2.15 glibc-2.15/ports
-mkdir glibc-build-2.15
-cd glibc-build-2.15
-../glibc-2.15/configure --prefix=/usr --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
-make all &amp;&amp; make install
-
-**4、检查一下：**
-# ldd --version
-ldd (GNU libc) 2.15
-Copyright (C) 2012 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-Written by Roland McGrath and Ulrich Drepper.
-</code></pre><p>已经升级到<code>glibc 2.15</code>了。</p>
+</code></pre><blockquote>
+<p>wget <a href="http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-common-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-devel-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/glibc-headers-2.15-60.el6.x86_64.rpm</a> \<br><a href="http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm" target="_blank" rel="noopener">http://ftp.redsleeve.org/pub/steam/nscd-2.15-60.el6.x86_64.rpm</a></p>
+</blockquote>
+<pre><code>**2、然后安装：**
+</code></pre><blockquote>
+<h1 id="rpm-Uvh-glibc-2-15-60-el6-x86-64-rpm"><a href="#rpm-Uvh-glibc-2-15-60-el6-x86-64-rpm" class="headerlink" title="rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \"></a>rpm -Uvh glibc-2.15-60.el6.x86_64.rpm \</h1><p>glibc-common-2.15-60.el6.x86_64.rpm \<br>glibc-devel-2.15-60.el6.x86_64.rpm \<br>glibc-headers-2.15-60.el6.x86_64.rpm \<br>nscd-2.15-60.el6.x86_64.rpm</p>
+</blockquote>
+<pre><code>**3、如果以上步骤无法更新，可以手动编译更新**
+</code></pre><blockquote>
+<p>get <a href="http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz" target="_blank" rel="noopener">http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.gz</a><br>wget <a href="http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz" target="_blank" rel="noopener">http://ftp.gnu.org/gnu/glibc/glibc-ports-2.15.tar.gz</a><br>tar -zxf glibc-2.15.tar.gz<br>tar -zxf glibc-ports-2.15.tar.gz<br>mv glibc-ports-2.15 glibc-2.15/ports<br>mkdir glibc-build-2.15<br>cd glibc-build-2.15<br>../glibc-2.15/configure –prefix=/usr –disable-profile –enable-add-ons –with-headers=/usr/include –with-binutils=/usr/bin<br>make all &amp;&amp; make install</p>
+</blockquote>
+<pre><code>**4、检查一下：**
+</code></pre><blockquote>
+<h1 id="ldd-–version"><a href="#ldd-–version" class="headerlink" title="ldd –version"></a>ldd –version</h1><p>ldd (GNU libc) 2.15<br>Copyright (C) 2012 Free Software Foundation, Inc.<br>This is free software; see the source for copying conditions.  There is NO<br>warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>Written by Roland McGrath and Ulrich Drepper.</p>
+</blockquote>
+<p>已经升级到<code>glibc 2.15</code>了。</p>
 <div name="判断BBR已正常工作" data-unique="判断BBR已正常工作"></div>
 
 <h2 id="判断BBR已正常工作"><a href="#判断BBR已正常工作" class="headerlink" title="判断BBR已正常工作"></a>判断BBR已正常工作</h2><p>判断<code>bbr</code>是否正常启动可以尝试<code>ping 10.0.0.2</code>，如果能通，说明<code>bbr</code>已经启动。</p>
