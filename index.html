@@ -5,13 +5,13 @@
   
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <link rel="dns-prefetch" href="http://flylai.ml">
+  <link rel="dns-prefetch" href="https://mrlai.github.io">
   <title>ALai</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="ALai">
 <meta property="og:type" content="website">
 <meta property="og:title" content="ALai">
-<meta property="og:url" content="http://flylai.ml/index.html">
+<meta property="og:url" content="https://mrlai.github.io/index.html">
 <meta property="og:site_name" content="ALai">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -311,6 +311,102 @@
 
 
   
+    <article id="post-frps_install" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/23/frps_install/">frps 一键安装脚本</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/23/frps_install/" class="archive-article-date">
+  	<time datetime="2018-08-23T02:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="已测试平台："><a href="#已测试平台：" class="headerlink" title="已测试平台："></a>已测试平台：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CentOS 6 32/64bit </span><br><span class="line">CentOS 7 32/64bit</span><br><span class="line">Debian 6 32/64bit</span><br><span class="line">Debian 7 32/64bit</span><br><span class="line">Debian 8 32/64bit</span><br><span class="line">Ubuntu 14 32/64bit</span><br></pre></td></tr></table></figure>
+<h2 id="一、安装命令"><a href="#一、安装命令" class="headerlink" title="一、安装命令"></a>一、安装命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://raw.githubusercontent.com/mrlai/onekey-install-shell/master/frps/install-frps.sh -O ./install-frps.sh</span><br><span class="line"></span><br><span class="line">chmod 700 ./install-frps.sh</span><br><span class="line"></span><br><span class="line">./install-frps.sh install</span><br></pre></td></tr></table></figure>
+<h2 id="二、安装步骤"><a href="#二、安装步骤" class="headerlink" title="二、安装步骤"></a>二、安装步骤</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Loading network version for frps, please wait...</span><br><span class="line">frps Latest release file frp_0.8.1_linux_amd64.tar.gz    #此步骤会自动获取frp最新版本，自动操作，无需理会</span><br><span class="line">Loading You Server IP, please wait...</span><br><span class="line">You Server IP:12.12.12.12                                           #自动获取你服务器的IP地址</span><br><span class="line">Please input your server setting:</span><br><span class="line"></span><br><span class="line">Please input frps bind_port [1-65535](Default Server Port: 5443):      #输入frp提供服务的端口，用于服务器端和客户端通信</span><br><span class="line">Please input frps dashboard_port [1-65535](Default dashboard_port: 6443): #输入frp的控制台服务端口，用于查看frp工作状态</span><br><span class="line">Please input frps vhost_http_port [1-65535](Default vhost_http_port: 80):  #输入frp进行http穿透的http服务端口</span><br><span class="line">Please input frps vhost_https_port [1-65535](Default vhost_https_port: 443): #输入frp进行https穿透的https服务端口</span><br><span class="line">Please input privilege_token (Default: WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq): #输入frp服务器和客户端通信的密码，默认是随机生成的</span><br><span class="line">Please input frps max_pool_count [1-200](Default max_pool_count: 50):     #设置每个代理可以创建的连接池上限，默认50</span><br><span class="line"></span><br><span class="line">##### Please select log_level #####</span><br><span class="line">1: info</span><br><span class="line">2: warn</span><br><span class="line">3: error</span><br><span class="line">4: debug</span><br><span class="line">#####################################################</span><br><span class="line">Enter your choice (1, 2, 3, 4 or exit. default [1]):        #设置日志等级，4个选项，默认是info</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please input frps log_max_days [1-30]</span><br><span class="line">(Default log_max_days: 3 day):            #设置日志保留天数，范围是1到30天，默认保留3天。</span><br><span class="line"></span><br><span class="line">##### Please select log_file #####</span><br><span class="line">1: enable</span><br><span class="line">2: disable</span><br><span class="line">#####################################################</span><br><span class="line">Enter your choice (1, 2 or exit. default [1]):      #设置是否开启日志记录，默认开启，开启后日志等级及保留天数生效，否则等级和保留天数无效</span><br></pre></td></tr></table></figure>
+<p>设置完成后检查你的输入，如果没有问题按任意键继续安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">============== Check your input ==============</span><br><span class="line">You Server IP : 12.12.12.12</span><br><span class="line">Bind port   : 5443</span><br><span class="line">Dashboard port: 6443</span><br><span class="line">vhost http port : 80</span><br><span class="line">vhost https port: 443</span><br><span class="line">Privilege token : WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq</span><br><span class="line">Max Pool count: 50</span><br><span class="line">Log level   : info</span><br><span class="line">Log max days  : 3</span><br><span class="line">Log file  : enable</span><br><span class="line">==============================================</span><br></pre></td></tr></table></figure></p>
+<p>安装结束后显示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Congratulations, frps install completed!</span><br><span class="line">==============================================</span><br><span class="line">You Server IP: 12.12.12.12</span><br><span class="line">Bind port   : 5443</span><br><span class="line">Dashboard port: 6443</span><br><span class="line">vhost http port : 80</span><br><span class="line">vhost https port: 443</span><br><span class="line">Privilege token : WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq</span><br><span class="line">Max Pool count: 50</span><br><span class="line">Log level   : info</span><br><span class="line">Log max days  : 3</span><br><span class="line">Log file: enable #将上面信息添加到你的路由器frp穿透插件中吧</span><br><span class="line">&gt; ==============================================</span><br><span class="line">&gt; frps Dashboard:http://12.12.12.12:6443/ #这个是frp控制台访问地址</span><br><span class="line">&gt; ==============================================</span><br></pre></td></tr></table></figure></p>
+<h2 id="三、更新命令"><a href="#三、更新命令" class="headerlink" title="三、更新命令"></a>三、更新命令</h2><blockquote>
+<p>./install-frps.sh update</p>
+</blockquote>
+<h2 id="四、卸载命令"><a href="#四、卸载命令" class="headerlink" title="四、卸载命令"></a>四、卸载命令</h2><blockquote>
+<p>./install-frps.sh uninstall</p>
+</blockquote>
+<h2 id="五、服务器端管理命令"><a href="#五、服务器端管理命令" class="headerlink" title="五、服务器端管理命令"></a>五、服务器端管理命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1.  /etc/init.d/frps start</span><br><span class="line"></span><br><span class="line">2.  /etc/init.d/frps stop</span><br><span class="line"></span><br><span class="line">3.  /etc/init.d/frps restart</span><br><span class="line"></span><br><span class="line">4.  /etc/init.d/frps status</span><br><span class="line"></span><br><span class="line">5.  /etc/init.d/frps config</span><br><span class="line"></span><br><span class="line">6.  /etc/init.d/frps version</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/23/frps_install/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-openvz-bbr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -435,102 +531,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/08/23/openvz-bbr/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-frps_install" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/23/frps_install/">frps 一键安装脚本</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/23/frps_install/" class="archive-article-date">
-  	<time datetime="2018-08-23T02:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="已测试平台："><a href="#已测试平台：" class="headerlink" title="已测试平台："></a>已测试平台：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CentOS 6 32/64bit </span><br><span class="line">CentOS 7 32/64bit</span><br><span class="line">Debian 6 32/64bit</span><br><span class="line">Debian 7 32/64bit</span><br><span class="line">Debian 8 32/64bit</span><br><span class="line">Ubuntu 14 32/64bit</span><br></pre></td></tr></table></figure>
-<h2 id="一、安装命令"><a href="#一、安装命令" class="headerlink" title="一、安装命令"></a>一、安装命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://raw.githubusercontent.com/mrlai/onekey-install-shell/master/frps/install-frps.sh -O ./install-frps.sh</span><br><span class="line"></span><br><span class="line">chmod 700 ./install-frps.sh</span><br><span class="line"></span><br><span class="line">./install-frps.sh install</span><br></pre></td></tr></table></figure>
-<h2 id="二、安装步骤"><a href="#二、安装步骤" class="headerlink" title="二、安装步骤"></a>二、安装步骤</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Loading network version for frps, please wait...</span><br><span class="line">frps Latest release file frp_0.8.1_linux_amd64.tar.gz    #此步骤会自动获取frp最新版本，自动操作，无需理会</span><br><span class="line">Loading You Server IP, please wait...</span><br><span class="line">You Server IP:12.12.12.12                                           #自动获取你服务器的IP地址</span><br><span class="line">Please input your server setting:</span><br><span class="line"></span><br><span class="line">Please input frps bind_port [1-65535](Default Server Port: 5443):      #输入frp提供服务的端口，用于服务器端和客户端通信</span><br><span class="line">Please input frps dashboard_port [1-65535](Default dashboard_port: 6443): #输入frp的控制台服务端口，用于查看frp工作状态</span><br><span class="line">Please input frps vhost_http_port [1-65535](Default vhost_http_port: 80):  #输入frp进行http穿透的http服务端口</span><br><span class="line">Please input frps vhost_https_port [1-65535](Default vhost_https_port: 443): #输入frp进行https穿透的https服务端口</span><br><span class="line">Please input privilege_token (Default: WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq): #输入frp服务器和客户端通信的密码，默认是随机生成的</span><br><span class="line">Please input frps max_pool_count [1-200](Default max_pool_count: 50):     #设置每个代理可以创建的连接池上限，默认50</span><br><span class="line"></span><br><span class="line">##### Please select log_level #####</span><br><span class="line">1: info</span><br><span class="line">2: warn</span><br><span class="line">3: error</span><br><span class="line">4: debug</span><br><span class="line">#####################################################</span><br><span class="line">Enter your choice (1, 2, 3, 4 or exit. default [1]):        #设置日志等级，4个选项，默认是info</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please input frps log_max_days [1-30]</span><br><span class="line">(Default log_max_days: 3 day):            #设置日志保留天数，范围是1到30天，默认保留3天。</span><br><span class="line"></span><br><span class="line">##### Please select log_file #####</span><br><span class="line">1: enable</span><br><span class="line">2: disable</span><br><span class="line">#####################################################</span><br><span class="line">Enter your choice (1, 2 or exit. default [1]):      #设置是否开启日志记录，默认开启，开启后日志等级及保留天数生效，否则等级和保留天数无效</span><br></pre></td></tr></table></figure>
-<p>设置完成后检查你的输入，如果没有问题按任意键继续安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">============== Check your input ==============</span><br><span class="line">You Server IP : 12.12.12.12</span><br><span class="line">Bind port   : 5443</span><br><span class="line">Dashboard port: 6443</span><br><span class="line">vhost http port : 80</span><br><span class="line">vhost https port: 443</span><br><span class="line">Privilege token : WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq</span><br><span class="line">Max Pool count: 50</span><br><span class="line">Log level   : info</span><br><span class="line">Log max days  : 3</span><br><span class="line">Log file  : enable</span><br><span class="line">==============================================</span><br></pre></td></tr></table></figure></p>
-<p>安装结束后显示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Congratulations, frps install completed!</span><br><span class="line">==============================================</span><br><span class="line">You Server IP: 12.12.12.12</span><br><span class="line">Bind port   : 5443</span><br><span class="line">Dashboard port: 6443</span><br><span class="line">vhost http port : 80</span><br><span class="line">vhost https port: 443</span><br><span class="line">Privilege token : WEWLRgwRjIJVPx2kuqzkGnvuftPLQniq</span><br><span class="line">Max Pool count: 50</span><br><span class="line">Log level   : info</span><br><span class="line">Log max days  : 3</span><br><span class="line">Log file: enable #将上面信息添加到你的路由器frp穿透插件中吧</span><br><span class="line">&gt; ==============================================</span><br><span class="line">&gt; frps Dashboard:http://12.12.12.12:6443/ #这个是frp控制台访问地址</span><br><span class="line">&gt; ==============================================</span><br></pre></td></tr></table></figure></p>
-<h2 id="三、更新命令"><a href="#三、更新命令" class="headerlink" title="三、更新命令"></a>三、更新命令</h2><blockquote>
-<p>./install-frps.sh update</p>
-</blockquote>
-<h2 id="四、卸载命令"><a href="#四、卸载命令" class="headerlink" title="四、卸载命令"></a>四、卸载命令</h2><blockquote>
-<p>./install-frps.sh uninstall</p>
-</blockquote>
-<h2 id="五、服务器端管理命令"><a href="#五、服务器端管理命令" class="headerlink" title="五、服务器端管理命令"></a>五、服务器端管理命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1.  /etc/init.d/frps start</span><br><span class="line"></span><br><span class="line">2.  /etc/init.d/frps stop</span><br><span class="line"></span><br><span class="line">3.  /etc/init.d/frps restart</span><br><span class="line"></span><br><span class="line">4.  /etc/init.d/frps status</span><br><span class="line"></span><br><span class="line">5.  /etc/init.d/frps config</span><br><span class="line"></span><br><span class="line">6.  /etc/init.d/frps version</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/23/frps_install/">展开全文 >></a>
         </p>
       
 
@@ -1144,6 +1144,108 @@ Exploit&amp;nbsp;&amp;nbsp; 攻击
 
 
   
+    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
+  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
+<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
+<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
+<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
+<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
+<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
+<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
+<p>apt-get clean #删除以下载的包</p>
+<p>reboot #重新启动</p>
+<p>这样应该就没问题了</p>
+<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
+<p>changelog – 下载指定软件包，并显示其changelog</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-metasploit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1266,108 +1368,6 @@ Exploit&amp;nbsp;&amp;nbsp; 攻击
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/08/06/metasploit/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-kail_sourcelist" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/08/06/kail_sourcelist/">Kail 更新国内源</a>
-    </h1>
-  
-
-        
-        <a href="/2018/08/06/kail_sourcelist/" class="archive-article-date">
-  	<time datetime="2018-08-06T03:33:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>#中科大<br>deb <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.ustc.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/kali</a> kali-rolling main non-free contrib</p>
-<p>#阿里云<br>deb <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://mirrors.aliyun.com/kali" target="_blank" rel="noopener">http://mirrors.aliyun.com/kali</a> kali-rolling main non-free contrib</p>
-<p>#清华大学<br>deb <a href="http://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="https://mirrors.tuna.tsinghua.edu.cn/kali" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#浙大<br>deb <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free<br>deb-src <a href="http://mirrors.zju.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.zju.edu.cn/kali</a> kali-rolling main contrib non-free</p>
-<p>#东软大学<br>deb <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib<br>deb-src <a href="http://mirrors.neusoft.edu.cn/kali" target="_blank" rel="noopener">http://mirrors.neusoft.edu.cn/kali</a> kali-rolling/main non-free contrib</p>
-<p>#官方源<br>deb <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib<br>deb-src <a href="http://http.kali.org/kali" target="_blank" rel="noopener">http://http.kali.org/kali</a> kali-rolling main non-free contrib</p>
-<p><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy" style="line-height:1.5;"><a title="复制代码" style="color:rgb(7,93,179);border:none;" target="_blank"><br></a></span></div></p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录<br>changelog – 下载指定软件包，并显示其changelog</p>
-<p>保存后之后回到命令行下执行命令：<br>apt-get update &amp;&amp; apt-get upgrade &amp;&amp; apt-get dist-upgrade</p>
-<p>apt-get clean #删除以下载的包</p>
-<p>reboot #重新启动</p>
-<p>这样应该就没问题了</p>
-<p>备注：<br>apt-get常用命令:<br>update – 取回更新的软件包列表信息<br>upgrade – 进行一次升级<br>install – 安装新的软件包(注：软件包名称是 libc6 而非 libc6.deb)<br>remove – 卸载软件包<br>purge – 卸载并清除软件包的配置<br>autoremove – 卸载所有自动安装且不再使用的软件包<br>dist-upgrade – 发布版升级，见 apt-get(8)<br>dselect-upgrade – 根据 dselect 的选择来进行升级<br>build-dep – 为源码包配置所需的编译依赖关系<br>clean – 删除所有已下载的包文件<br>autoclean – 删除已下载的旧包文件<br>check – 核对以确认系统的依赖关系的完整性<br>source – 下载源码包文件<br>download – 下载指定的二进制包到当前目录</p>
-<p>changelog – 下载指定软件包，并显示其changelog</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/随笔//" class="article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/08/06/kail_sourcelist/">展开全文 >></a>
         </p>
       
 
@@ -1946,7 +1946,7 @@ description: 附加一段文章摘要，字数最好在140字以内，会出现�
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2018 ALai
+    		&copy; 2019 ALai
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
